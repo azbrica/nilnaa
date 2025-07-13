@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hadiah Ultah Zah</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      font-family: 'VT323', monospace;
+      color: #00ff99;
+      overflow-x: hidden;
+    }
+    .page { display: none; padding: 20px; text-align: center; }
+    #page1 { display: block; }
+    #fireworks {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .btn {
+      background: #00ff99;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .box {
+      background: darkgreen;
+      padding: 20px;
+      border-radius: 20px;
+      border: 2px dashed lime;
+      margin-bottom: 30px;
+    }
+    .music-player {
+      background: black;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #00ff99;
+      display: inline-block;
+    }
+    audio {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="page1" class="page">
+    <h1>🎉 Happy Birthday, Zah!</h1>
+    <p>Tap untuk membuka hadiah digitalmu...</p>
+    <button class="btn" onclick="nextPage()">Buka Hadiah 🎁</button>
+    <canvas id="fireworks"></canvas>
+  </div>
+
+  <div id="page2" class="page">
+    <div class="box">
+      <p style="white-space: pre-wrap; text-align: left;">barokallah fii umrik ya zah 😂
+
+17 agustus ini bukan cuma hari kemerdekaan negara ygy wkwk tapi juga hari lahir org yg luar biasa..asekk 😂apasi bahasanya.. spesial limited gasi wkwk
+semoga Allah tambahin berkah umurnya.. diluaskan dan dicukupkan rezekinya.. ditenangkan pikirannya..dibahagiakan hatinya.. Allah kabulkan semua doanya.. semua hajatnya.. dimudahkan semua urusannya..semoga makin mutqin hafalanya..tambah istiqomah murojaahnya wkwk eh iya pas itu barusan gelondong ya kan? khatamn bu mudah, aku liat status bpk lah kok wkwk batiba khataman..emang beda si bro satu ini..semoga nular dah ya Allah aamiin 😭 semoga ilmunya tambah manfaat barokah.. semoga hmm apalagi ya 😂 ya semoga tambah kuat jadi diri sendiri wkwk.. diluaskan sabarnya..emng idup tu kan ga selalu hmm bisa dijelasin gitu kan, ga semua yg kita pendem bisa dijelasin keorg lain.. apasi ini dah dah gitu aja wkwk, ini klok ditulis semua ga cukup kyknya 🙏😂pokonya semoga semuanya baik² aja lah ya..trus sehat sehat dah aamiin.. 🤲
+      </p>
+    </div>
+    <p>⬇️ Gulir ke bawah untuk dengar musik 🎶</p>
+    <div class="music-player">
+      <img src="cover.jpg" width="300" style="border-radius: 20px;" />
+      <p>About You</p>
+      <audio controls>
+        <source src="aboutyou.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+    <br /><br />
+    <button class="btn" onclick="goToCake()">🎂 Buka Kue Ultah</button>
+  </div>
+
+  <div id="page3" class="page">
+    <h2>🎂 Tiup lilinnya ya!</h2>
+    <div id="cake-container"></div>
+    <audio id="hbd" src="lagu-hbd.mp3" autoplay></audio>
+    <p id="micWarn" style="color: red; display: none;">🎤 Aktifkan izin mikrofon untuk meniup lilin</p>
+  </div>
+
+  <script>
+    function nextPage() {
+      document.getElementById('page1').style.display = 'none';
+      document.getElementById('page2').style.display = 'block';
+    }
+    function goToCake() {
+      document.getElementById('page2').style.display = 'none';
+      document.getElementById('page3').style.display = 'block';
+      document.getElementById('hbd').play();
+    }
+    // Lilin Tiup
+    const cake = document.createElement('div');
+    cake.innerHTML = \`
+    <style>
+      .candle { width: 10px; height: 40px; background: pink; margin: auto; }
+      .flame { width: 10px; height: 10px; background: orange; border-radius: 50%; margin: auto; animation: flicker 0.3s infinite alternate; }
+      @keyframes flicker {
+        from { transform: scale(1); opacity: 1; }
+        to { transform: scale(1.2); opacity: 0.6; }
+      }
+    </style>
+    <div class="candle"></div>
+    <div id="flame" class="flame"></div>\`;
+    document.getElementById("cake-container").appendChild(cake);
+
+    // Microphone
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      const context = new AudioContext();
+      const mic = context.createMediaStreamSource(stream);
+      const analyser = context.createAnalyser();
+      mic.connect(analyser);
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      function detect() {
+        analyser.getByteFrequencyData(data);
+        let volume = data.reduce((a, b) => a + b, 0) / data.length;
+        if (volume > 60) {
+          document.getElementById("flame").style.display = "none";
+        }
+        requestAnimationFrame(detect);
+      }
+      detect();
+    }).catch(() => {
+      document.getElementById("micWarn").style.display = "block";
+    });
+  </script>
+</body>
+</html>
