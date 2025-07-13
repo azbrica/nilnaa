@@ -61,40 +61,41 @@
       display: none;
       width: 90%;
       max-width: 400px;
-      margin-top: 1rem;
       border-radius: 15px;
       box-shadow: 0 0 15px #00ff99;
+      transform: scaleX(-1);
     }
-    .btn {
-      background-color: #00ff99;
-      color: black;
-      padding: 0.8rem 1.5rem;
+    .video-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+    }
+    .btn-icon {
+      background: none;
       border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
+      font-size: 2rem;
       margin-top: 1rem;
-    }
-    @keyframes type {
-      from { width: 0 }
-      to { width: 100% }
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <canvas class="fireworks" id="fireworks"></canvas>
+
   <div class="title">
     <h2 id="typing-text"></h2>
     <span id="tapToOpen">Tap untuk membuka hadiah digitalmu...</span>
   </div>
+
   <div class="content" id="mainContent">
     <div class="message-box">
       <p>barokallah fii umrik ya zah 😂<br><br>
-      17 agustus ini bukan cuma hari kemerdekaan negara ygy wkwk tapi juga hari lahir org yg luar biasa..asekk 😂apasi bahasanya.. spesial limited gasi wkwk
-      semoga Allah tambahin berkah umurnya.. diluaskan dan dicukupkan rezekinya.. ditenangkan pikirannya..dibahagiakan hatinya.. Allah kabulkan semua doanya.. semua hajatnya.. dimudahkan semua urusannya..semoga makin mutqin hafalanya..tambah istiqomah murojaahnya wkwk eh iya pas itu barusan gelondong ya kan? khatamn bu mudah, aku liat status bpk lah kok wkwk batiba khataman..emang beda si bro satu ini..semoga nular dah ya Allah aamiin 😭 semoga ilmunya tambah manfaat barokah.. semoga hmm apalagi ya 😂 ya semoga tambah kuat jadi diri sendiri wkwk.. diluaskan sabarnya..emng idup tu kan ga selalu hmm bisa dijelasin gitu kan, ga semua yg kita pendem bisa dijelasin keorg lain.. apasi ini dah dah gitu aja wkwk, ini klok ditulis semua ga cukup kyknya 🙏😂pokonya semoga semuanya baik² aja lah ya..trus sehat sehat dah aamiin.. 🤲</p>
-      <button class="btn" onclick="bukaKamera()">🎁 Buka Hadiah Misterius</button>
-      <video id="selfieCam" autoplay playsinline muted></video>
+      17 agustus ini bukan cuma hari kemerdekaan negara ygy wkwk tapi juga hari lahir org yg luar biasa..asekk 😂apasi bahasanya.. spesial limited gasi wkwk<br>
+      semoga Allah tambahin berkah umurnya.. diluaskan dan dicukupkan rezekinya.. ditenangkan pikirannya.. dibahagiakan hatinya.. Allah kabulkan semua doanya.. semua hajatnya.. dimudahkan semua urusannya..semoga makin mutqin hafalanya..tambah istiqomah murojaahnya wkwk eh iya pas itu barusan gelondong ya kan? khatamn bu mudah, aku liat status bpk lah kok wkwk batiba khataman..emang beda si bro satu ini..semoga nular dah ya Allah aamiin 😭 semoga ilmunya tambah manfaat barokah.. semoga hmm apalagi ya 😂 ya semoga tambah kuat jadi diri sendiri wkwk.. diluaskan sabarnya.. emng idup tu kan ga selalu hmm bisa dijelasin gitu kan, ga semua yg kita pendem bisa dijelasin keorg lain.. apasi ini dah dah gitu aja wkwk, ini klok ditulis semua ga cukup kyknya 🙏😂 pokonya semoga semuanya baik² aja lah ya.. trus sehat sehat dah aamiin.. 🤲</p>
+      <button class="btn-icon" onclick="nextPage()">🎁</button>
     </div>
+
     <div class="audio-player">
       <img src="cover.jpg" alt="cover lagu" class="cover" />
       <div><strong>About You </strong></div>
@@ -105,8 +106,15 @@
     </div>
   </div>
 
+  <!-- Halaman kamera -->
+  <div id="pageKamera" class="content" style="display:none">
+    <h2>🎉 Tadaaa... liat siapa yang ulang tahun hari ini!</h2>
+    <div class="video-wrapper">
+      <video id="selfieCam" autoplay playsinline muted></video>
+    </div>
+  </div>
+
   <script>
-    // Typing effect
     const typingText = "barokallah fii umrik nilna";
     const typingEl = document.getElementById("typing-text");
     let index = 0;
@@ -169,15 +177,27 @@
       document.getElementById("mainContent").style.display = "block";
     }, { once: true });
 
-    // Kamera Selfie
+    // 🎁 Tombol ke halaman kamera
+    function nextPage() {
+      document.getElementById("mainContent").style.display = "none";
+      document.getElementById("pageKamera").style.display = "block";
+      bukaKamera();
+    }
+
     function bukaKamera() {
       const vid = document.getElementById("selfieCam");
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-        .then(stream => {
-          vid.srcObject = stream;
-          vid.style.display = "block";
-        })
-        .catch(() => alert("⚠️ Kamera tidak bisa diakses! Pastikan izinnya aktif ya."));
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: "user"
+        }
+      })
+      .then(stream => {
+        vid.srcObject = stream;
+        vid.style.display = "block";
+      })
+      .catch(() => alert("⚠️ Kamera tidak bisa diakses! Aktifkan izinnya ya."));
     }
   </script>
 </body>
